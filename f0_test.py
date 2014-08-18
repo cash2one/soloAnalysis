@@ -1,5 +1,4 @@
-from tool.FFT import FFT
-from tool.FFT import log
+from tool.FFT import convolution
 from wavGet import signal
 import tool.normalizer as nml
 import math
@@ -10,16 +9,13 @@ def isLocalMax(x,ind):
 
 #auto-correlation function
 def ACF(x,windowLength):
-	n = log(x)
-	x_FFT = FFT(x)
-	y_FFT = FFT(x[windowLength-1::-1],n)
-	mult = FFT([i*j for i,j in zip(x_FFT,y_FFT)][::-1])
-	return [i.real/2**n for i in mult][windowLength-1:]
+	ans = convolution(x,x[windowLength-1::-1])
+	return [i.real for i in ans][windowLength-1:]
 
 def f0_viaACF(x):
 	if x[0]<0:
 		x = [-i for i in x]
-	ac,j = ACF(x,1000),1
+	ac,j = ACF(x,len(x)//2),1
 	while ac[j]<0.6*ac[0] or not isLocalMax(ac,j):
 		j += 1
 	#plt.plot(x,'b')
