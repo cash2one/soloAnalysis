@@ -1,6 +1,7 @@
 from __future__ import division
-import normalizer as nml
+import tool.normalizer as nml
 import struct
+import tool.denoiser as dn
 file = open(raw_input(), 'rb')
 
 #META_INFO process
@@ -25,3 +26,4 @@ if Channels==2 and BitsPerSample==16:
 		signal += [(LChannel[-1]+RChannel[-1])/2]
 	
 signal = nml.max_normalize(signal)
+signal = dn.GFilter(signal,15)
