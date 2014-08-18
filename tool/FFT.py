@@ -41,3 +41,8 @@ def FFT(*args):
 #short time fourier transform
 def STFT(signal, n):
 	return map(abs,FFT_fund(slice(signal,n),logKAPPA))
+
+def convolution(x,y):
+	n = max(log(x),log(y))
+	x_FFT,y_FFT = map(lambda x:FFT(x,n),(x,y))
+	return FFT([i*j/2**n for i,j in zip(x_FFT,y_FFT)][::-1])
