@@ -37,7 +37,7 @@ def D(A,B):
 			sum += KLD(A[i][j],B[i][i])
 	return sum
 
-#non-negative matrix factorization
+#non-negative matrix factorization, stg=A*S
 def NMF(stg):
 	
 	r = SVDF(stg,1)
