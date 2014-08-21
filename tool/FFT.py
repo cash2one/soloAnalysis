@@ -38,6 +38,10 @@ def FFT(*args):
 		logDeg = log(x)
 	return FFT_fund(x+[0]*(2**logDeg-len(x)),logDeg)
 
+def iFFT(*args):
+	x = map(lambda z:z.imag+1j*z.real,args[0])
+	return map(lambda z:z.imag+1j*z.real,FFT(x+args[1:]))
+
 #short time fourier transform
 def STFT(signal, n):
 	return map(abs,FFT_fund(slice(signal,n),logKAPPA))
@@ -45,4 +49,4 @@ def STFT(signal, n):
 def convolution(x,y):
 	n = max(log(x),log(y))
 	x_FFT,y_FFT = map(lambda x:FFT(x,n),(x,y))
-	return FFT([i*j/2**n for i,j in zip(x_FFT,y_FFT)][::-1])
+	return iFFT([i*j/2**n for i,j in zip(x_FFT,y_FFT)])
