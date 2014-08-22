@@ -1,9 +1,9 @@
 import math
 
 #constants in STFT
-logKAPPA = 8
+logKAPPA = 10
 KAPPA = 2**logKAPPA
-ETA = 2**(logKAPPA-3)
+ETA = 2**(logKAPPA-1)
 
 #unit roots
 def uRoot(k,n):
@@ -47,7 +47,7 @@ def iFFT(*args):
 
 #short time fourier transform
 def STFT(signal, n):
-	return map(abs,FFT_fund(slice(signal,n),logKAPPA))
+	return map(abs,FFT_fund(slice(signal,n),logKAPPA))[:ETA]
 
 def convolution(x,y):
 	n = max(log(x),log(y))
