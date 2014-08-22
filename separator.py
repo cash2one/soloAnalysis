@@ -7,8 +7,9 @@ from tool.FFT import *
 N0 = (len(signal)-KAPPA)//ETA
 threshold = 6
 
-spectrogram = np.array([STFT(signal,i) for i in range(0,N0)]).transpose()
+spectrogram = np.array([STFT(signal,i) for i in range(0,N0)]).T
 n,m = spectrogram.shape
+print (n,m)
 
 #matrix factorize via SVD
 def SVDF(stg,outputType=0):
@@ -22,22 +23,7 @@ def SVDF(stg,outputType=0):
 	else:
 		return i0
 
-def oneMat(i,j):
-	return np.array([[1]*j]*i)
-
-#KL-divergence
-def KLD(p,q):
-	return p*math.log(p/q)-p+q
-
-#KL-distance between matrices	
-def D(A,B):
-	sum = 0
-	for i in range(len(A)):
-		for j in range(len(A[i])):
-			sum += KLD(A[i][j],B[i][i])
-	return sum
-
-#non-negative matrix factorization, stg=A*S
+#non-negative matrix factorization
 def NMF(stg):
 	
 	r = SVDF(stg,1)
@@ -46,12 +32,17 @@ def NMF(stg):
 	lastD = 0
 	
 	while True:
-		X = np.dot(A,S)
-		if abs(D(stg,X)-lastD)<1e-10:
+		AS = np.dot(A,S)
+		stg_over_AS = stg/AS
+		Dis = ((stg*np.log(stg_over_AS))-stg+AS).sum()
+		if abs(Dis-lastD)<1e-4:
 			break
-		lastD = D(stg,X)
-		A = A*np.dot(stg/X,S.transpose())/np.dot(oneMat(n,m),S.transpose())
-		X = np.dot(A,S)
-		S = S*np.dot(A.transpose(),stg/X)/np.dot(A.transpose(),oneMat(n,m))
+		lastD = Dis
+		
+		A = A*np.dot(stg_over_AS,S.T)/S.sum(axis=1)
+		AS = np.dot(A,S)
+		stg_over_AS = stg/AS
+		S = S*(np.dot(stg_over_AS.T,A)/A.sum(axis=0)).T
+		print lastD
 	
 	return A,S
