@@ -17,7 +17,7 @@ def SVDF(stg,outputType=0):
 	i0 = 0
 	while i0<len(s)-1 and s[i0]<=s[i0+1]*threshold:
 		i0 += 1
-	if outputType = 0:
+	if outputType == 0:
 		return (U,np.dot(s[:i0],V))
 	else:
 		return i0
