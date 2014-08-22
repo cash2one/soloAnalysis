@@ -40,7 +40,10 @@ def FFT(*args):
 
 def iFFT(*args):
 	x = map(lambda z:z.imag+1j*z.real,args[0])
-	return map(lambda z:z.imag+1j*z.real,FFT(x+args[1:]))
+	if len(args)>1:
+		return map(lambda z:z.imag+1j*z.real,FFT(x,args[1]))
+	else:
+		return map(lambda z:z.imag+1j*z.real,FFT(x))
 
 #short time fourier transform
 def STFT(signal, n):
