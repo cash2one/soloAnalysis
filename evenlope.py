@@ -1,3 +1,6 @@
+from __future__ import division
+from wavGet import get
+import tool.denoiser as dn
 import matplotlib.pyplot as plt
 
 def linearpy(p1x,p1y,p2x,p2y,px):
