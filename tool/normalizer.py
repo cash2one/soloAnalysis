@@ -1,3 +1,5 @@
+from __future__ import division
+
 def DC_offline(x):
 	mean = sum(x)/len(x)
 	return [i-mean for i in x]
